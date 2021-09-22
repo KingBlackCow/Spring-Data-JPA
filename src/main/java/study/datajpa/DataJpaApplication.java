@@ -2,8 +2,10 @@ package study.datajpa;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
+//@EnableJpaRepositories(basePackages = "study.datajpa.repository") 스프링쓸때만 사용
 public class DataJpaApplication {
 
 	public static void main(String[] args) {
