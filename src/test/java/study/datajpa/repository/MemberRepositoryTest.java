@@ -11,6 +11,7 @@ import study.datajpa.entity.Team;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,7 +26,7 @@ class MemberRepositoryTest {
     TeamRepository teamRepository;
 
     @Test
-    public void testMember(){
+    public void testMember() {
         Member member = new Member("memberA");
         Member savedMember = memberRepository.save(member);
         //Optional<Member> findMember = memberRepository.findById(savedMember.getId());
@@ -70,7 +71,7 @@ class MemberRepositoryTest {
     }
 
     @Test
-    public void findByUsernameAndAgeGreaterThen(){
+    public void findByUsernameAndAgeGreaterThen() {
         Member m1 = new Member("AAA", 10);
         Member m2 = new Member("AAA", 20);
 
@@ -83,12 +84,12 @@ class MemberRepositoryTest {
     }
 
     @Test//전체 조회
-    public void findHelloBy(){
+    public void findHelloBy() {
         List<Member> helloBy = memberRepository.findTop3HelloBy();
     }
 
     @Test
-    public void testNamedQuery(){
+    public void testNamedQuery() {
         Member m1 = new Member("AAA", 10);
         Member m2 = new Member("BBB", 20);
 
@@ -101,20 +102,20 @@ class MemberRepositoryTest {
     }
 
     @Test
-    public void testQuery(){
+    public void testQuery() {
         Member m1 = new Member("AAA", 10);
         Member m2 = new Member("BBB", 20);
 
         memberRepository.save(m1);
         memberRepository.save(m2);
 
-        List<Member> result = memberRepository.findUser("AAA",10);
+        List<Member> result = memberRepository.findUser("AAA", 10);
         Member findMember = result.get(0);
         assertThat(findMember).isEqualTo(m1);
     }
 
     @Test
-    public void findUsernameList(){
+    public void findUsernameList() {
         Member m1 = new Member("AAA", 10);
         Member m2 = new Member("BBB", 20);
 
@@ -122,13 +123,13 @@ class MemberRepositoryTest {
         memberRepository.save(m2);
 
         List<String> result = memberRepository.findUsernameList();
-        for (String s: result) {
-            System.out.println("s = "+ s);
+        for (String s : result) {
+            System.out.println("s = " + s);
         }
     }
 
     @Test
-    public void findMemberDto(){
+    public void findMemberDto() {
         Team team = new Team("teamA");
         teamRepository.save(team);
 
@@ -137,22 +138,36 @@ class MemberRepositoryTest {
         memberRepository.save(m1);
 
         List<MemberDto> result = memberRepository.findMemberDto();
-        for (MemberDto dto: result) {
-            System.out.println("dto = "+ dto);
+        for (MemberDto dto : result) {
+            System.out.println("dto = " + dto);
         }
     }
 
     @Test
-    public void findByNames(){
+    public void findByNames() {
         Member m1 = new Member("AAA", 10);
         Member m2 = new Member("BBB", 20);
 
         memberRepository.save(m1);
         memberRepository.save(m2);
 
-        List<Member> result = memberRepository.findByNames(Arrays.asList("AAA","BBB"));
-        for (Member member: result) {
-            System.out.println("member = "+ member);
+        List<Member> result = memberRepository.findByNames(Arrays.asList("AAA", "BBB"));
+        for (Member member : result) {
+            System.out.println("member = " + member);
         }
     }
+
+    @Test
+    public void returnType() {
+        Member m1 = new Member("AAA", 10);
+        Member m2 = new Member("BBB", 20);
+
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+        List<Member> list = memberRepository.findListByUsername("AAA");
+        Member member = memberRepository.findMemberByUsername("AAA");
+        Optional<Member> optionalMember = memberRepository.findOptionalByUsername("AAA");
+    }
+
 }

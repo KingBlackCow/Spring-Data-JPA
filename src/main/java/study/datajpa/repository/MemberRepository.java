@@ -9,6 +9,7 @@ import study.datajpa.entity.Member;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member,Long> { //멤버는 만들객체 Long은 id값
 
@@ -31,4 +32,8 @@ public interface MemberRepository extends JpaRepository<Member,Long> { //멤버�
 
     @Query("select m from Member m where m.username in :names")
     List<Member> findByNames(@Param("names") Collection<String> names);
+
+    List<Member> findListByUsername(String username); //컬렉션
+    Member findMemberByUsername(String username); //단건
+    Optional<Member> findOptionalByUsername(String username); //단건 Optional
 }
