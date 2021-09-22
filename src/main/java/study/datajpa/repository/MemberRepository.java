@@ -5,6 +5,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
+
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public interface MemberRepository extends JpaRepository<Member,Long> { //멤버는 만들객체 Long은 id값
@@ -25,4 +28,7 @@ public interface MemberRepository extends JpaRepository<Member,Long> { //멤버�
     //dto로 조회시 "new 패키지 경로" 를 붙여야한다.
     @Query("select new study.datajpa.dto.MemberDto(m.id, m.username, t.name) from Member m join m.team t")
     List<MemberDto> findMemberDto();
+
+    @Query("select m from Member m where m.username in :names")
+    List<Member> findByNames(@Param("names") Collection<String> names);
 }
