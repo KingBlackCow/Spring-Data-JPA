@@ -10,6 +10,7 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
+        #dialect: org.hibernate.dialect.Oracle10gDialect //오라클에 맞는 쿼리가 나간다.
         #show_sql:true jpa가 실행하는 쿼리를 console에 다찍는거
         format_sql: true
 
