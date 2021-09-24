@@ -17,7 +17,7 @@ import java.util.List;
 @SpringBootTest
 @Transactional//테스트파일에서 Transactional입력 필수 테스트 파일이라 바로 삭제시켜줌
 @Rollback(false)
-class MemberJpaRepositoryTest {
+class MemberJpaRepositoryTest<pubilc> {
 
     @Autowired
     MemberJpaRepository memberJpaRepository;
@@ -118,5 +118,14 @@ class MemberJpaRepositoryTest {
         assertThat(totalCount).isEqualTo(5);
     }
 
-
+    @Test
+    public void bulkUpdate(){
+        memberJpaRepository.save(new Member("member1", 10));
+        memberJpaRepository.save(new Member("member2", 19));
+        memberJpaRepository.save(new Member("member3", 20));
+        memberJpaRepository.save(new Member("member4", 21));
+        memberJpaRepository.save(new Member("member5", 40));
+        int resultCount = memberJpaRepository.bulkAgePlus(20);
+        assertThat(resultCount).isEqualTo(3);
+    }
 }

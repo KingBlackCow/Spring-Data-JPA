@@ -13,6 +13,8 @@ import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 import study.datajpa.entity.Team;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +30,9 @@ class MemberRepositoryTest {
 
     @Autowired
     TeamRepository teamRepository;
+
+    @PersistenceContext
+    EntityManager em;
 
     @Test
     public void testMember() {
@@ -222,7 +227,30 @@ class MemberRepositoryTest {
 //        //assertThat(slice.getTotalPages()).isEqualTo(2);//전체개수를 가져오는게 없음
 //        assertThat(slice.isFirst()).isTrue();
 //        assertThat(slice.hasNext()).isTrue();
+    }
 
+    @Test
+    public void bulkUpdate(){
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 19));
+        memberRepository.save(new Member("member3", 20));
+        memberRepository.save(new Member("member4", 21));
+        memberRepository.save(new Member("member5", 40));
+        //save는 기본적으로 flush상태
+
+        //bulkAgePlus는 JPQL이므로 JPQL실행전 flush를 해줌줌
+        int resultCount = memberRepository.bulkAgePlus(20);
+        //em.flush();//변경된 내용을 db에 반영
+        //em.clear();//영속성 컨텍스트 안에 데이터를 날려서 다시 db에서 가져오게함.
+        //MemberReopository(@Modifying(clearAutomatically =true) <-이걸 넣어주자
+
+        //벌크(update)연산 후에는 꼭 em.flush(), em.clear()를 하자
+        List<Member> result = memberRepository.findListByUsername("member5");
+        Member member5 = result.get(0);
+        System.out.println("member5 = " + member5);
+        //위에꺼는 영속성 컨텍스트에서 가져오기에 40살로 표현됨
+
+        assertThat(resultCount).isEqualTo(3);
     }
 
 }
