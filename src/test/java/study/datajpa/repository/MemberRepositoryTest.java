@@ -307,4 +307,44 @@ class MemberRepositoryTest {
         }
     }
 
+    @Test
+    public void queryHint(){
+        //given
+        Member member1 = new Member("member1",10);
+        memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        //when
+        //(1)
+//        Member findMember = memberRepository.findById(member1.getId()).get();
+//        findMember.setUsername("member2");
+//
+//        //DirtyChecking 이름이 변경된걸 감지함
+//        em.flush();
+
+        //(2) @QueryHint 예제 이거는 조회속성이라는 걸 알려줘서 update쿼리가 안날아가게함
+        //1차캐시에 저장되는 스냅샷을 만들지 않음 update쿼리도 안날아감
+        Member findMember = memberRepository.findReadOnlyByUsername("member1");
+        findMember.setUsername("member2");
+
+        //DirtyChecking 이름이 변경된걸 감지함
+        em.flush();
+    }
+
+    @Test
+    public void lock(){
+        //given
+        Member member1 = new Member("member1",10);
+        memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        List<Member> findMember = memberRepository.findLockByUsername("member1");
+        findMember.get(0).setUsername("member2");
+
+        //DirtyChecking 이름이 변경된걸 감지함
+        em.flush();
+    }
+
 }
