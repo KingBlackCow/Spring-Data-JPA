@@ -3,6 +3,7 @@ package study.datajpa.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 
+import javax.persistence.Entity;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -50,4 +52,24 @@ public interface MemberRepository extends JpaRepository<Member,Long> { //멤버�
     @Modifying(clearAutomatically =true)
     @Query("update Member m set m.age = m.age +1 where m.age>= :age")
     int bulkAgePlus(@Param("age") int age);
+
+    //n+1 해결법
+    @Query("select m from Member m left join fetch m.team")
+    List<Member> findMemberFetchJoin();
+
+    @Override
+    @EntityGraph(attributePaths = {"team"})
+    List<Member> findAll();
+
+
+    //바로 위와 동일
+    @EntityGraph(attributePaths = {"team"})
+    @Query("select m from Member m")
+    List<Member> findMemberEntityGraph();
+
+    //@EntityGraph(attributePaths = {"team"})
+    @EntityGraph("Member.all") //네임드커리같이 네임드엔티티그래프(Member.class에 정의)를 이용하는 방법
+    List<Member> findEntityGraphByUsername(@Param("username") String username);
+
+
 }

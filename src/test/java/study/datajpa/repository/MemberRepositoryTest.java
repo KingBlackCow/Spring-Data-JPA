@@ -253,4 +253,58 @@ class MemberRepositoryTest {
         assertThat(resultCount).isEqualTo(3);
     }
 
+    @Test
+    public void findMemberLazy() {
+        //given
+        //member1 -> teamA
+        //member2 -> teamB
+
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+        teamRepository.save(teamA);
+        teamRepository.save(teamB);
+        Member member1 = new Member("member1", 10, teamA);
+        Member member2 = new Member("member2", 10, teamB);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        em.flush();
+        em.clear();
+
+        //(1)
+        //N+1 문제발생 멤버조회시 팀이 조회되지 않고 member.getTeam().getName()을 통해 한번더 조회하기 떄문에
+//        List<Member> members = memberRepository.findAll();
+//        for (Member member:members) {
+//            System.out.println("member = " + member.getUsername());
+//            System.out.println("member.teamClass = " + member.getTeam().getClass());
+//            System.out.println("member.team = " + member.getTeam().getName());
+//        }
+
+        //(2)
+//        List<Member> members = memberRepository.findMemberFetchJoin();
+//        for (Member member:members) {
+//            System.out.println("member = " + member.getUsername());
+//            System.out.println("member.teamClass = " + member.getTeam().getClass());
+//            System.out.println("member.team = " + member.getTeam().getName());
+//        }
+
+        //fetchjoin 뜻 : join한 후 select을 통해 member에 다 넣어줌줌
+
+        //(3) 엔티티 그래프 사용해서 출력하는 예제
+//        List<Member> membersEntityGraph = memberRepository.findAll();
+//        for (Member member : membersEntityGraph) {
+//            System.out.println("member = " + member.getUsername());
+//            System.out.println("member.teamClass = " + member.getTeam().getClass());
+//            System.out.println("member.team = " + member.getTeam().getName());
+//        }
+
+        //(4)
+        List<Member> membersEntityGraph = memberRepository.findEntityGraphByUsername("member1");
+        for (Member member : membersEntityGraph) {
+            System.out.println("member = " + member.getUsername());
+            System.out.println("member.teamClass = " + member.getTeam().getClass());
+            System.out.println("member.team = " + member.getTeam().getName());
+        }
+    }
+
 }
