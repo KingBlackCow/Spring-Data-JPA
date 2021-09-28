@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member,Long> { //멤버는 만들객체 Long은 id값
+public interface MemberRepository extends JpaRepository<Member,Long>, MemberRepositoryCustom { //멤버는 만들객체 Long은 id값
 
     List<Member> findByUsernameAndAgeGreaterThan(String username, int age);
 
