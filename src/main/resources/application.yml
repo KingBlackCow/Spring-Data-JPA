@@ -14,6 +14,15 @@ spring:
         #show_sql:true jpa가 실행하는 쿼리를 console에 다찍는거
         format_sql: true
 
+# pageable size default값 변경하기 20 -> 10 MemberController 참고고
+#  dat:
+#    web:
+#      pageable:
+#        default-page-size: 10
+#        max-page-size: 2000
+#        one-indexed-parameters: true // page시작을 1부터함
+
+
 logging.level:
   org.hibernate.SQL: debug #jpa가 실행하는 쿼리를 log로 남기는거
 # org.hibernate.type: trace 쿼리 파라미터 바인딩해주는 옵션 바인딩 파라미터를 로그로 남김
