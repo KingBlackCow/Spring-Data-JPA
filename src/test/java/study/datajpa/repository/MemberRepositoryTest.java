@@ -229,7 +229,7 @@ class MemberRepositoryTest {
     }
 
     @Test
-    public void bulkUpdate(){
+    public void bulkUpdate() {
         memberRepository.save(new Member("member1", 10));
         memberRepository.save(new Member("member2", 19));
         memberRepository.save(new Member("member3", 20));
@@ -307,9 +307,9 @@ class MemberRepositoryTest {
     }
 
     @Test
-    public void queryHint(){
+    public void queryHint() {
         //given
-        Member member1 = new Member("member1",10);
+        Member member1 = new Member("member1", 10);
         memberRepository.save(member1);
         em.flush();
         em.clear();
@@ -332,9 +332,9 @@ class MemberRepositoryTest {
     }
 
     @Test
-    public void lock(){
+    public void lock() {
         //given
-        Member member1 = new Member("member1",10);
+        Member member1 = new Member("member1", 10);
         memberRepository.save(member1);
         em.flush();
         em.clear();
@@ -347,24 +347,24 @@ class MemberRepositoryTest {
     }
 
     @Test
-    public void callCustom(){
+    public void callCustom() {
         memberRepository.save(new Member("member1", 10));
         memberRepository.save(new Member("member2", 19));
         memberRepository.save(new Member("member3", 20));
         memberRepository.save(new Member("member4", 21));
         memberRepository.save(new Member("member5", 40));
         List<Member> result = memberRepository.findMemberCustom();
-        for (Member m: result) {
+        for (Member m : result) {
             System.out.println(m);
         }
     }
 
     @Test
-    public void specBasic(){
-        Team teamA= new Team("teamA");
+    public void specBasic() {
+        Team teamA = new Team("teamA");
         em.persist(teamA);
-        Member m1 = new Member("m1",0,teamA);
-        Member m2 = new Member("m2",0,teamA);
+        Member m1 = new Member("m1", 0, teamA);
+        Member m2 = new Member("m2", 0, teamA);
 
         em.persist(m1);
         em.persist(m2);
@@ -377,11 +377,11 @@ class MemberRepositoryTest {
     }
 
     @Test
-    public void queryByExample(){
-        Team teamA= new Team("teamA");
+    public void queryByExample() {
+        Team teamA = new Team("teamA");
         em.persist(teamA);
-        Member m1 = new Member("m1",0,teamA);
-        Member m2 = new Member("m2",0,teamA);
+        Member m1 = new Member("m1", 0, teamA);
+        Member m2 = new Member("m2", 0, teamA);
 
         em.persist(m1);
         em.persist(m2);
@@ -403,4 +403,21 @@ class MemberRepositoryTest {
         assertThat(result.get(0).getUsername()).isEqualTo("m1");
     }
 
+    @Test
+    public void projections() {
+        Team teamA = new Team("teamA");
+        em.persist(teamA);
+        Member m1 = new Member("m1", 0, teamA);
+        Member m2 = new Member("m2", 0, teamA);
+
+        em.persist(m1);
+        em.persist(m2);
+
+        em.flush();
+        em.clear();
+        List<NestedCloseProjections> result = memberRepository.findProjectionsByUsername("m1", NestedCloseProjections.class);
+        for (NestedCloseProjections nestedCloseProjections : result) {
+            System.out.println("nestedCloseProjections = " + nestedCloseProjections);
+        }
+    }
 }
