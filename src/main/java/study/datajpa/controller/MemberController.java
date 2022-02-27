@@ -39,7 +39,7 @@ public class MemberController {
         Page<Member> page = memberRepository.findAll(pageable);
         //Page<MemberDto> map = page.map(member -> new MemberDto(member));
         Page<MemberDto> map = page.map(MemberDto::new);//위와 동일 이것을 메서드 레퍼런스라함
-
+        //메서드 레퍼런스
         return map;
     }
 

@@ -20,7 +20,7 @@ public class DataJpaApplication {
 
 
 	}
-	@Bean
+	@Bean//수정자 , 생성자 넣을때 추가
 	public AuditorAware<String> auditorProvider() {
 		return () -> Optional.of(UUID.randomUUID().toString());
 	}
