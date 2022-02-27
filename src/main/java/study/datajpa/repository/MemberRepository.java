@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberDataJpaRepository extends JpaRepository<Member,Long>, MemberRepositoryCustom,JpaSpecificationExecutor<Member> { //멤버는 만들객체 Long은 id값
+public interface MemberRepository extends JpaRepository<Member,Long>, MemberRepositoryCustom,JpaSpecificationExecutor<Member> { //멤버는 만들객체 Long은 id값
 
     List<Member> findByUsernameAndAgeGreaterThan(String username, int age);
 
@@ -32,6 +32,7 @@ public interface MemberDataJpaRepository extends JpaRepository<Member,Long>, Mem
     @Query("select new study.datajpa.dto.MemberDto(m.id, m.username, t.name) from Member m join m.team t")
     List<MemberDto> findMemberDto();
 
+    //파라미터바인딩
     @Query("select m from Member m where m.username in :names")
     List<Member> findByNames(@Param("names") Collection<String> names);
 
