@@ -9,18 +9,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
-import study.datajpa.repository.MemberDataJpaRepository;
+import study.datajpa.repository.MemberRepository;
 
 import javax.annotation.PostConstruct;
 
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
-    private final MemberDataJpaRepository memberDataJpaRepository;
+    private final MemberRepository memberRepository;
 
     @GetMapping("/members/{id}")
     public String findMember(@PathVariable("id") Long id){
-        Member member = memberDataJpaRepository.findById(id).get();
+        Member member = memberRepository.findById(id).get();
         return member.getUsername();
     }
 
@@ -36,17 +36,17 @@ public class MemberController {
 
         //http://localhost:8080/members?page=0&size=3&sort=id,desc
         //id내림차순정렬
-        Page<Member> page = memberDataJpaRepository.findAll(pageable);
+        Page<Member> page = memberRepository.findAll(pageable);
         //Page<MemberDto> map = page.map(member -> new MemberDto(member));
         Page<MemberDto> map = page.map(MemberDto::new);//위와 동일 이것을 메서드 레퍼런스라함
         //메서드 레퍼런스
         return map;
     }
 
-    @PostConstruct
-    public void init(){
-        for (int i = 0; i < 100; i++) {
-            memberDataJpaRepository.save(new Member("user"+i,i));
-        }
-    }
+//    @PostConstruct
+//    public void init(){
+//        for (int i = 0; i < 100; i++) {
+//            memberRepository.save(new Member("user"+i,i));
+//        }
+//    }
 }

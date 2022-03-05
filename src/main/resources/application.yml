@@ -24,5 +24,5 @@ spring:
 
 
 logging.level:
-  org.hibernate.SQL: debug #jpa가 실행하는 쿼리를 log로 남기는거
+  org.hibernate.SQL: debug #jpa가11 실행하는 쿼리를 log로 남기는거
 # org.hibernate.type: trace 쿼리 파라미터 바인딩해주는 옵션 바인딩 파라미터를 로그로 남김

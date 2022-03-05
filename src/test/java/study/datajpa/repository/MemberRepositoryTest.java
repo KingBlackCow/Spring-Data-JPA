@@ -22,9 +22,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 @Rollback(false)
-class MemberDataJpaRepositoryTest {
+class MemberRepositoryTest {
     @Autowired
-    MemberDataJpaRepository memberDataJpaRepository;
+    MemberRepository memberRepository;
 
     @Autowired
     TeamRepository teamRepository;
@@ -35,9 +35,9 @@ class MemberDataJpaRepositoryTest {
     @Test
     public void testMember() {
         Member member = new Member("memberA");
-        Member savedMember = memberDataJpaRepository.save(member);
+        Member savedMember = memberRepository.save(member);
         //Optional<Member> findMember = memberRepository.findById(savedMember.getId());
-        Member findMember = memberDataJpaRepository.findById(savedMember.getId()).get();
+        Member findMember = memberRepository.findById(savedMember.getId()).get();
 
 
         assertThat((findMember.getId())).isEqualTo(member.getId());
@@ -49,30 +49,30 @@ class MemberDataJpaRepositoryTest {
     public void basicCRUD() {
         Member member1 = new Member("member1");
         Member member2 = new Member("member2");
-        memberDataJpaRepository.save(member1);
-        memberDataJpaRepository.save(member2);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
 
         //단건 조회 검증
-        Member findMember1 = memberDataJpaRepository.findById(member1.getId()).get();
-        Member findMember2 = memberDataJpaRepository.findById(member2.getId()).get();
+        Member findMember1 = memberRepository.findById(member1.getId()).get();
+        Member findMember2 = memberRepository.findById(member2.getId()).get();
         assertThat(findMember1).isEqualTo(member1);
         assertThat(findMember2).isEqualTo(member2);
 
         //findMember1.setUsername("member!!!!!"); jpa에서 update를 안해도 되는 이유
 
         //리스트 조회 검증
-        List<Member> all = memberDataJpaRepository.findAll();
+        List<Member> all = memberRepository.findAll();
         assertThat(all.size()).isEqualTo(2);
 
         //카운트검증
-        long count = memberDataJpaRepository.count();
+        long count = memberRepository.count();
         assertThat(count).isEqualTo(2);
 
         //삭제검증
-        memberDataJpaRepository.delete(member1);
-        memberDataJpaRepository.delete(member2);
+        memberRepository.delete(member1);
+        memberRepository.delete(member2);
 
-        long deletedCount = memberDataJpaRepository.count();
+        long deletedCount = memberRepository.count();
         assertThat(deletedCount).isEqualTo(0);
 
     }
@@ -82,9 +82,9 @@ class MemberDataJpaRepositoryTest {
         Member m1 = new Member("AAA", 10);
         Member m2 = new Member("AAA", 20);
 
-        memberDataJpaRepository.save(m1);
-        memberDataJpaRepository.save(m2);
-        List<Member> result = memberDataJpaRepository.findByUsernameAndAgeGreaterThan("AAA", 15);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+        List<Member> result = memberRepository.findByUsernameAndAgeGreaterThan("AAA", 15);
         assertThat(result.get(0).getUsername()).isEqualTo("AAA");
         assertThat(result.get(0).getAge()).isEqualTo(20);
         assertThat(result.size()).isEqualTo(1);
@@ -92,7 +92,7 @@ class MemberDataJpaRepositoryTest {
 
     @Test//전체 조회
     public void findHelloBy() {
-        List<Member> helloBy = memberDataJpaRepository.findTop3HelloBy();
+        List<Member> helloBy = memberRepository.findTop3HelloBy();
     }
 
     @Test
@@ -100,10 +100,10 @@ class MemberDataJpaRepositoryTest {
         Member m1 = new Member("AAA", 10);
         Member m2 = new Member("BBB", 20);
 
-        memberDataJpaRepository.save(m1);
-        memberDataJpaRepository.save(m2);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
 
-        List<Member> result = memberDataJpaRepository.findByUsername("AAA");
+        List<Member> result = memberRepository.findByUsername("AAA");
         Member findMember = result.get(0);
         assertThat(findMember).isEqualTo(m1);
     }
@@ -113,10 +113,10 @@ class MemberDataJpaRepositoryTest {
         Member m1 = new Member("AAA", 10);
         Member m2 = new Member("BBB", 20);
 
-        memberDataJpaRepository.save(m1);
-        memberDataJpaRepository.save(m2);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
 
-        List<Member> result = memberDataJpaRepository.findUser("AAA", 10);
+        List<Member> result = memberRepository.findUser("AAA", 10);
         Member findMember = result.get(0);
         assertThat(findMember).isEqualTo(m1);
     }
@@ -126,10 +126,10 @@ class MemberDataJpaRepositoryTest {
         Member m1 = new Member("AAA", 10);
         Member m2 = new Member("BBB", 20);
 
-        memberDataJpaRepository.save(m1);
-        memberDataJpaRepository.save(m2);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
 
-        List<String> result = memberDataJpaRepository.findUsernameList();
+        List<String> result = memberRepository.findUsernameList();
         for (String s : result) {
             System.out.println("s = " + s);
         }
@@ -142,9 +142,9 @@ class MemberDataJpaRepositoryTest {
 
         Member m1 = new Member("AAA", 10);
         m1.setTeam(team);
-        memberDataJpaRepository.save(m1);
+        memberRepository.save(m1);
 
-        List<MemberDto> result = memberDataJpaRepository.findMemberDto();
+        List<MemberDto> result = memberRepository.findMemberDto();
         for (MemberDto dto : result) {
             System.out.println("dto = " + dto);
         }
@@ -155,10 +155,10 @@ class MemberDataJpaRepositoryTest {
         Member m1 = new Member("AAA", 10);
         Member m2 = new Member("BBB", 20);
 
-        memberDataJpaRepository.save(m1);
-        memberDataJpaRepository.save(m2);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
 
-        List<Member> result = memberDataJpaRepository.findByNames(Arrays.asList("AAA", "BBB"));
+        List<Member> result = memberRepository.findByNames(Arrays.asList("AAA", "BBB"));
         for (Member member : result) {
             System.out.println("member = " + member);
         }
@@ -169,31 +169,32 @@ class MemberDataJpaRepositoryTest {
         Member m1 = new Member("AAA", 10);
         Member m2 = new Member("BBB", 20);
 
-        memberDataJpaRepository.save(m1);
-        memberDataJpaRepository.save(m2);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
 
-        List<Member> list = memberDataJpaRepository.findListByUsername("AAA");
-        Member member = memberDataJpaRepository.findMemberByUsername("AAA");
-        Optional<Member> optionalMember = memberDataJpaRepository.findOptionalByUsername("AAA");
+        List<Member> list = memberRepository.findListByUsername("AAA");
+        Member member = memberRepository.findMemberByUsername("AAA");
+        Optional<Member> optionalMember = memberRepository.findOptionalByUsername("AAA");
     }
 
     @Test
     public void paging() {
 
         //given
-        memberDataJpaRepository.save(new Member("member1", 10));
-        memberDataJpaRepository.save(new Member("member2", 10));
-        memberDataJpaRepository.save(new Member("member3", 10));
-        memberDataJpaRepository.save(new Member("member4", 10));
-        memberDataJpaRepository.save(new Member("member5", 10));
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 10));
+        memberRepository.save(new Member("member3", 10));
+        memberRepository.save(new Member("member4", 10));
+        memberRepository.save(new Member("member5", 10));
 
         int age = 10;
 
         //3번쨰인자인 Sort.by는 안넣어도됨
         PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+        PageRequest pageRequest2 = PageRequest.of(1, 3);
 
         //when
-        Page<Member> page = memberDataJpaRepository.findByAge(age, pageRequest);
+        Page<Member> page = memberRepository.findByAge(age, pageRequest2);
 
         //Entity -> Dto
         Page<MemberDto> toMap = page.map(m -> new MemberDto(m.getId(), m.getUsername(), null));
@@ -202,10 +203,12 @@ class MemberDataJpaRepositoryTest {
         List<Member> content = page.getContent();
         long totalElements = page.getTotalElements();
 
+//        System.out.println("=======");
 //        for (Member member: content) {
 //            System.out.println("member = "+ member);
 //        }
 //        System.out.println("totalElement = "+ totalElements);
+//        System.out.println("========");
 
         assertThat(content.size()).isEqualTo(3);
         assertThat(page.getTotalElements()).isEqualTo(5);
@@ -214,9 +217,9 @@ class MemberDataJpaRepositoryTest {
         assertThat(page.isFirst()).isTrue();
         assertThat(page.hasNext()).isTrue();
 
-//        PageRequest pageRequest2 = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+//        PageRequest pageRequest3 = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
 //
-//        Slice<Member> slice = memberRepository.findByAge(age, pageRequest2); //리스트로 받아도됨
+//        Slice<Member> slice = memberRepository.findByAge(age, pageRequest3); //리스트로 받아도됨
 //        List<Member> content2 = slice.getContent();
 //
 //        assertThat(content2.size()).isEqualTo(3);
@@ -229,21 +232,21 @@ class MemberDataJpaRepositoryTest {
 
     @Test
     public void bulkUpdate() {
-        memberDataJpaRepository.save(new Member("member1", 10));
-        memberDataJpaRepository.save(new Member("member2", 19));
-        memberDataJpaRepository.save(new Member("member3", 20));
-        memberDataJpaRepository.save(new Member("member4", 21));
-        memberDataJpaRepository.save(new Member("member5", 40));
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 19));
+        memberRepository.save(new Member("member3", 20));
+        memberRepository.save(new Member("member4", 21));
+        memberRepository.save(new Member("member5", 40));
         //save는 기본적으로 flush상태
 
-        //bulkAgePlus는 JPQL이므로 JPQL실행전 flush를 해줌줌
-        int resultCount = memberDataJpaRepository.bulkAgePlus(20);
+        //bulkAgePlus는 JPQL이므로 JPQL실행전 flush를 해줌
+        int resultCount = memberRepository.bulkAgePlus(20);
         //em.flush();//변경된 내용을 db에 반영
         //em.clear();//영속성 컨텍스트 안에 데이터를 날려서 다시 db에서 가져오게함.
         //MemberReopository(@Modifying(clearAutomatically =true) <-이걸 넣어주자
 
         //벌크(update)연산 후에는 꼭 em.flush(), em.clear()를 하자
-        List<Member> result = memberDataJpaRepository.findListByUsername("member5");
+        List<Member> result = memberRepository.findListByUsername("member5");
         Member member5 = result.get(0);
         System.out.println("member5 = " + member5);
         //위에꺼는 영속성 컨텍스트에서 가져오기에 40살로 표현됨
@@ -263,8 +266,8 @@ class MemberDataJpaRepositoryTest {
         teamRepository.save(teamB);
         Member member1 = new Member("member1", 10, teamA);
         Member member2 = new Member("member2", 10, teamB);
-        memberDataJpaRepository.save(member1);
-        memberDataJpaRepository.save(member2);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
 
         em.flush();
         em.clear();
@@ -297,7 +300,7 @@ class MemberDataJpaRepositoryTest {
 //        }
 
         //(4)
-        List<Member> membersEntityGraph = memberDataJpaRepository.findEntityGraphByUsername("member1");
+        List<Member> membersEntityGraph = memberRepository.findEntityGraphByUsername("member1");
         for (Member member : membersEntityGraph) {
             System.out.println("member = " + member.getUsername());
             System.out.println("member.teamClass = " + member.getTeam().getClass());
@@ -309,7 +312,7 @@ class MemberDataJpaRepositoryTest {
     public void queryHint() {
         //given
         Member member1 = new Member("member1", 10);
-        memberDataJpaRepository.save(member1);
+        memberRepository.save(member1);
         em.flush();
         em.clear();
 
@@ -323,7 +326,7 @@ class MemberDataJpaRepositoryTest {
 
         //(2) @QueryHint 예제 이거는 조회속성이라는 걸 알려줘서 update쿼리가 안날아가게함
         //1차캐시에 저장되는 스냅샷을 만들지 않음 update쿼리도 안날아감
-        Member findMember = memberDataJpaRepository.findReadOnlyByUsername("member1");
+        Member findMember = memberRepository.findReadOnlyByUsername("member1");
         findMember.setUsername("member2");
 
         //DirtyChecking 이름이 변경된걸 감지함
@@ -334,11 +337,11 @@ class MemberDataJpaRepositoryTest {
     public void lock() {
         //given
         Member member1 = new Member("member1", 10);
-        memberDataJpaRepository.save(member1);
+        memberRepository.save(member1);
         em.flush();
         em.clear();
 
-        List<Member> findMember = memberDataJpaRepository.findLockByUsername("member1");
+        List<Member> findMember = memberRepository.findLockByUsername("member1");
         findMember.get(0).setUsername("member2");
 
         //DirtyChecking 이름이 변경된걸 감지함
@@ -347,12 +350,12 @@ class MemberDataJpaRepositoryTest {
 
     @Test
     public void callCustom() {
-        memberDataJpaRepository.save(new Member("member1", 10));
-        memberDataJpaRepository.save(new Member("member2", 19));
-        memberDataJpaRepository.save(new Member("member3", 20));
-        memberDataJpaRepository.save(new Member("member4", 21));
-        memberDataJpaRepository.save(new Member("member5", 40));
-        List<Member> result = memberDataJpaRepository.findMemberCustom();
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 19));
+        memberRepository.save(new Member("member3", 20));
+        memberRepository.save(new Member("member4", 21));
+        memberRepository.save(new Member("member5", 40));
+        List<Member> result = memberRepository.findMemberCustom();
         for (Member m : result) {
             System.out.println(m);
         }
@@ -371,7 +374,7 @@ class MemberDataJpaRepositoryTest {
         em.clear();
 
         Specification<Member> spec = MemberSpec.username("m1").and(MemberSpec.teamName("teamA"));
-        List<Member> result = memberDataJpaRepository.findAll(spec);
+        List<Member> result = memberRepository.findAll(spec);
         assertThat(result.size()).isEqualTo(1);
     }
 
@@ -397,7 +400,7 @@ class MemberDataJpaRepositoryTest {
 
         Example<Member> example = Example.of(member, matcher);
 
-        List<Member> result = memberDataJpaRepository.findAll(example);
+        List<Member> result = memberRepository.findAll(example);
 
         assertThat(result.get(0).getUsername()).isEqualTo("m1");
     }
@@ -414,7 +417,7 @@ class MemberDataJpaRepositoryTest {
 
         em.flush();
         em.clear();
-        List<NestedCloseProjections> result = memberDataJpaRepository.findProjectionsByUsername("m1", NestedCloseProjections.class);
+        List<NestedCloseProjections> result = memberRepository.findProjectionsByUsername("m1", NestedCloseProjections.class);
         for (NestedCloseProjections nestedCloseProjections : result) {
             System.out.println("nestedCloseProjections = " + nestedCloseProjections);
         }
@@ -436,7 +439,7 @@ class MemberDataJpaRepositoryTest {
 
         //Member result = memberRepository.findByNativeQuery("m1");
         //System.out.println("result = " + result);
-        Page<MemberProjection> result = memberDataJpaRepository.findByNativeProjection(PageRequest.of(0,10));
+        Page<MemberProjection> result = memberRepository.findByNativeProjection(PageRequest.of(0,10));
         List<MemberProjection> content = result.getContent();
         for(MemberProjection memberProjection : content){
             System.out.println("memberProjection = "+ memberProjection.getUsername());
