@@ -46,7 +46,7 @@ public interface MemberRepository extends JpaRepository<Member,Long>, MemberRepo
     //Slice<Member> findByAge(int age, Pageable pageable);//리스트로 받아도됨
 
     //@Modifying//executeUpdate() 역할 (update 문에서는 필수)
-    @Modifying(clearAutomatically =true)
+    @Modifying(clearAutomatically =true)//clearAutomatically = true 쿼리 실행 후 바로 em.flush
     @Query("update Member m set m.age = m.age +1 where m.age>= :age")
     int bulkAgePlus(@Param("age") int age);
 
