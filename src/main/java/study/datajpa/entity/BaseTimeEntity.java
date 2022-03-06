@@ -15,13 +15,11 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)//이벤트 기반 동작인걸알려줌
 @MappedSuperclass
 @Getter
-public class BaseEntity extends BaseTimeEntity{
-
-
-    @CreatedBy
+public class BaseTimeEntity {
+    @CreatedDate
     @Column(updatable = false)
-    private String createdBy;//등록자(사람)
+    private LocalDateTime createdDate;//시간
 
-    @LastModifiedBy
-    private String lastModifiedBy;//수정자(사람)
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate;//시간
 }
