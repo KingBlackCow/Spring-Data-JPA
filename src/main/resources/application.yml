@@ -15,7 +15,7 @@ spring:
         format_sql: true
 
 # pageable size default값 변경하기 20 -> 10 MemberController 참고고
-#  dat:
+#  data:
 #    web:
 #      pageable:
 #        default-page-size: 10
